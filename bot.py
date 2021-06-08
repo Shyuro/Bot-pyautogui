@@ -1,10 +1,10 @@
-import time
 import pyautogui
 import random
-import logging
 import os
 import sys
 from pyHM import mouse
+import time
+import datetime
 
 
 def resource_path0(relative_path):
@@ -16,15 +16,19 @@ def resource_path0(relative_path):
     return os.path.join(base_path, relative_path)
 
 
+class logging:
+    @staticmethod
+    def debug(msg):
+        print(f'{datetime.datetime.today().hour}:{datetime.datetime.today().minute}:{datetime.datetime.today().second}'
+              f' DEBUG: {msg}')
+
+
 class Program:
 
     lista_botoes = [
         (411, 524, 114, 29), (843, 524, 114, 29), (1274, 524, 114, 29), (1706, 524, 114, 29),
         (411, 823, 114, 29), (843, 823, 114, 29), (1274, 823, 114, 29), (1706, 823, 114, 29)
     ]
-
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)s: %(message)s')
 
     solicitado = resource_path0('img/solicitado.png')
     ganharmoedas = resource_path0('img/ganharmoedas.bmp')

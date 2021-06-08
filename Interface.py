@@ -11,7 +11,6 @@ class Interface:
 
     def __init__(self):
         Sg.theme_global('Reddit')
-        self.status = 'run'
         self.janela1, self.janela2 = self.layouts(1), None
 
         while True:
@@ -37,7 +36,8 @@ class Interface:
 
         if n == 2:
             layout2 = [
-                [Sg.Output(size=(30, 20))]
+                [Sg.Text('Aperte Esc para sair!')],
+                [Sg.Output(size=(40, 20), text_color='blue')]
             ]
             return Sg.Window('Instelikes-bot',
                              layout=layout2,

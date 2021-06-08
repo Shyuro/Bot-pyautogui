@@ -1,12 +1,16 @@
 import sys
-from bot import Program
+from bot import Program, resource_path0
 import PySimpleGUI as Sg
 from threading import Thread
 
 
 class Interface:
+    follow_img = resource_path0('interface_imagens/follow.png')
+    like_img = resource_path0('interface_imagens/like.png')
+    icon = resource_path0('interface_imagens/icon.ico')
+
     def __init__(self):
-        Sg.theme_global('Black')
+        Sg.theme_global('Reddit')
         self.status = 'run'
         self.janela1, self.janela2 = self.layouts(1), None
 
@@ -19,7 +23,6 @@ class Interface:
                 programa = Thread(target=Program, args=(self.eventos,))
                 programa.start()
 
-
             if self.eventos == Sg.WINDOW_CLOSED:
                 sys.exit()
 
@@ -27,10 +30,10 @@ class Interface:
     def layouts(n=1):
         if n == 1:
             layout1 = [
-                [Sg.Button(image_filename='follow.png', key='seguir'),
-                 Sg.Button(image_filename='like.png', key='curtir')]
+                [Sg.Button(image_filename=Interface.follow_img, key='seguir', button_color='white'),
+                 Sg.Button(image_filename=Interface.like_img, key='curtir', button_color='white')]
             ]
-            return Sg.Window('Instelikes-bot', layout=layout1, finalize=True)
+            return Sg.Window('Instelikes-bot', layout=layout1, finalize=True, icon=Interface.icon)
 
         if n == 2:
             layout2 = [
@@ -41,4 +44,5 @@ class Interface:
                              finalize=True,
                              location=(-6, 717),
                              keep_on_top=True,
-                             disable_minimize=True,)
+                             disable_minimize=True,
+                             icon=Interface.icon)

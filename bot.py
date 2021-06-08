@@ -1,9 +1,19 @@
-import sys
 import time
 import pyautogui
 import random
 import logging
+import os
+import sys
 from pyHM import mouse
+
+
+def resource_path0(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(
+        sys,
+        '_MEIPASS',
+        os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 class Program:
@@ -15,6 +25,18 @@ class Program:
 
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s: %(message)s')
+
+    solicitado = resource_path0('img/solicitado.png')
+    ganharmoedas = resource_path0('img/ganharmoedas.bmp')
+    confirmarimg = resource_path0('img/confirmar.png')
+    atualizarimg = resource_path0('img/atualizar.png')
+    curtiroff = resource_path0('img/curtiroff.png')
+    curtiron = resource_path0('img/curtiron.png')
+    indisponivel = resource_path0('img/indisponivel.png')
+    seguindo = resource_path0('img/seguindo.png')
+    seguir = resource_path0('img/seguir.png')
+    xpag = resource_path0('img/xpag.png')
+    xinstelikes = resource_path0('img/xinstelikes.png')
 
     def __init__(self, modo):
         self.count = 0  # numero de trades finalizadas
@@ -56,16 +78,17 @@ class Program:
         time.sleep(1)'''
 
     def b_ganharmoedas(self):
-        logging.debug('pegando moedas')
+        logging.debug('Esperando, tela....')
         while True:
 
             regiao = random.choice(self.lista_botoes)
-            ganharmoedas = pyautogui.locateOnScreen('img/ganharmoedas.bmp', confidence=0.9, region=regiao)
+            ganharmoedas = pyautogui.locateOnScreen(Program.ganharmoedas, confidence=0.9, region=regiao)
             if ganharmoedas:
                 try:
-                    x, y = pyautogui.locateCenterOnScreen('img/ganharmoedas.bmp',
+                    x, y = pyautogui.locateCenterOnScreen(Program.ganharmoedas,
                                                           confidence=0.9,
                                                           region=regiao)
+                    logging.debug('pegando moedas')
                     mouse.move(x, y)
                     pyautogui.click()
                     time.sleep(2)
@@ -78,11 +101,11 @@ class Program:
         logging.debug('curtindo')
         while True:
 
-            curtiroff = pyautogui.locateOnScreen('img/curtiroff.png', confidence=0.8)
-            curtiron = pyautogui.locateOnScreen('img/curtiron.png', confidence=0.8)
+            curtiroff = pyautogui.locateOnScreen(Program.curtiroff, confidence=0.8)
+            curtiron = pyautogui.locateOnScreen(Program.curtiron, confidence=0.8)
 
             if curtiron:
-                x, y = pyautogui.locateCenterOnScreen('img/curtiron.png', confidence=0.8)
+                x, y = pyautogui.locateCenterOnScreen(Program.curtiron, confidence=0.8)
                 pyautogui.moveTo(x, y, 1, pyautogui.easeOutQuad)
                 pyautogui.click()
                 self.count += 1
@@ -98,13 +121,13 @@ class Program:
     def b_seguir(self):
         logging.debug('seguindo')
         while True:
-            seguindo = pyautogui.locateOnScreen('img/seguindo.png', confidence=0.8)
-            solicitado = pyautogui.locateOnScreen('img/solicitado.png', confidence=0.8)
-            indisponivel = pyautogui.locateOnScreen('img/indisponivel.png', confidence=0.8)
-            seguir = pyautogui.locateOnScreen('img/seguir.png', confidence=0.8)
+            seguindo = pyautogui.locateOnScreen(Program.seguindo, confidence=0.8)
+            solicitado = pyautogui.locateOnScreen(Program.solicitado, confidence=0.8)
+            indisponivel = pyautogui.locateOnScreen(Program.indisponivel, confidence=0.8)
+            seguir = pyautogui.locateOnScreen(Program.seguir, confidence=0.8)
             if seguir:
                 try:
-                    x, y = pyautogui.locateCenterOnScreen('img/seguir.png', confidence=0.8)
+                    x, y = pyautogui.locateCenterOnScreen(Program.seguir, confidence=0.8)
                     mouse.move(x, y)
                     pyautogui.click()
                     self.count += 1
@@ -140,22 +163,22 @@ class Program:
     def confirmar():
         logging.debug('confirmando')
         while True:
-            confirmar = pyautogui.locateOnScreen('img/confirmar.png', confidence=0.8)
+            confirmar = pyautogui.locateOnScreen(Program.confirmarimg, confidence=0.8)
 
             if confirmar:
                 try:
-                    x, y = pyautogui.locateCenterOnScreen('img/confirmar.png', confidence=0.8)
+                    x, y = pyautogui.locateCenterOnScreen(Program.confirmarimg, confidence=0.8)
                     mouse.move(x, y, multiplier=1 + random.random())
                     pyautogui.click()
                 except TypeError:
                     pass
                 time.sleep(1)
                 for c in range(3):
-                    verificar = pyautogui.locateOnScreen('img/confirmar.png', confidence=0.8)
+                    verificar = pyautogui.locateOnScreen(Program.confirmarimg, confidence=0.8)
                     if verificar:
                         try:
                             mouse.move(random.randrange(100, 1000), random.randrange(100, 1000))
-                            x_v, y_v = pyautogui.locateCenterOnScreen('img/confirmar.png', confidence=0.8)
+                            x_v, y_v = pyautogui.locateCenterOnScreen(Program.confirmarimg, confidence=0.8)
                             mouse.move(x_v, y_v, multiplier=1 + random.random())
                             pyautogui.click()
                         except TypeError:
@@ -163,10 +186,10 @@ class Program:
 
                 time.sleep(1)
 
-                verificar2 = pyautogui.locateOnScreen('img/xinstelikes.png')
+                verificar2 = pyautogui.locateOnScreen(Program.xinstelikes)
                 if verificar2:
                     try:
-                        x_v2, y_v2 = pyautogui.locateCenterOnScreen('img/xinstelikes.png')
+                        x_v2, y_v2 = pyautogui.locateCenterOnScreen(Program.xinstelikes)
                         mouse.move(x_v2, y_v2)
                         pyautogui.click()
                         break
@@ -180,10 +203,10 @@ class Program:
     def atualizar(self):
         logging.debug('atualizando')
         while True:
-            atualizar = pyautogui.locateOnScreen('img/atualizar.png', confidence=0.8)
+            atualizar = pyautogui.locateOnScreen(Program.atualizarimg, confidence=0.8)
             if atualizar:
                 try:
-                    x, y = pyautogui.locateCenterOnScreen('img/atualizar.png', confidence=0.8)
+                    x, y = pyautogui.locateCenterOnScreen(Program.atualizarimg, confidence=0.8)
                     mouse.move(x, y)
                     pyautogui.click()
                     logging.debug('atualizado com sucesso!')
@@ -197,11 +220,11 @@ class Program:
     def mudar_pag():
         logging.debug('movendo pagina')
         while True:
-            instax = pyautogui.locateOnScreen('img/xpag.png', confidence=0.7)
+            instax = pyautogui.locateOnScreen(Program.xpag, confidence=0.7)
 
             if instax:
                 try:
-                    x_i, y_i = pyautogui.locateCenterOnScreen('img/xpag.png',
+                    x_i, y_i = pyautogui.locateCenterOnScreen(Program.xpag,
                                                               confidence=0.8,
                                                               region=(464, 10, 11, 12))
                     pyautogui.moveTo(x_i, y_i, 1, pyautogui.easeOutQuad)

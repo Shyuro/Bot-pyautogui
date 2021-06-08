@@ -32,17 +32,18 @@ class Interface:
                 [Sg.Button(image_filename=Interface.follow_img, key='seguir', button_color='white'),
                  Sg.Button(image_filename=Interface.like_img, key='curtir', button_color='white')]
             ]
-            return Sg.Window('Instelikes-bot', layout=layout1, finalize=True, icon=Interface.icon)
+            return Sg.Window('Mr Insta', layout=layout1, finalize=True, icon=Interface.icon)
 
         if n == 2:
             layout2 = [
                 [Sg.Text('Aperte Esc para sair!')],
                 [Sg.Output(size=(40, 20), text_color='blue')]
             ]
-            return Sg.Window('Instelikes-bot',
+            return Sg.Window('Mr Insta',
                              layout=layout2,
                              finalize=True,
                              location=(-6, 717),
                              keep_on_top=True,
                              disable_minimize=True,
-                             icon=Interface.icon)
+                             icon=Interface.icon,
+                             disable_close=True)

@@ -50,7 +50,7 @@ class Program:
 
         logging.debug('Aperte Esc para sair!!')
         try:
-            logging.debug('Iniciando programa.')
+            logging.debug('iniciando programa.')
             while True:
                 if self.count >= self.update:
                     Program.atualizar(self)
@@ -61,7 +61,7 @@ class Program:
                     Program.b_curtir(self)
                 Program.confirmar()
         except KeyboardInterrupt:
-            logging.debug('Finalizando programa.')
+            logging.debug('finalizando programa.')
             sys.exit()
 
     '''def iniciar_text(self):
@@ -82,12 +82,13 @@ class Program:
         time.sleep(1)'''
 
     def b_ganharmoedas(self):
-        logging.debug('Esperando, tela....')
+        logging.debug('esperando, tela....')
         while True:
 
             regiao = random.choice(self.lista_botoes)
             ganharmoedas = pyautogui.locateOnScreen(Program.ganharmoedas, confidence=0.9, region=regiao)
             if ganharmoedas:
+                logging.debug('tela detectada!')
                 try:
                     x, y = pyautogui.locateCenterOnScreen(Program.ganharmoedas,
                                                           confidence=0.9,

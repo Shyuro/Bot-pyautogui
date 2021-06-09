@@ -19,7 +19,8 @@ def resource_path0(relative_path):
 class logging:
     @staticmethod
     def debug(msg):
-        print(f'{datetime.datetime.today().hour}:{datetime.datetime.today().minute}:{datetime.datetime.today().second}'
+        print(f'>>> '
+              f'{datetime.datetime.today().hour}:{datetime.datetime.today().minute}:{datetime.datetime.today().second}'
               f' DEBUG: {msg}')
 
 

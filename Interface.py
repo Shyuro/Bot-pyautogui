@@ -1,7 +1,8 @@
 import sys
 from bot import Program, resource_path0
 import PySimpleGUI as Sg
-from threading import Thread
+from multiprocessing import Process
+import keyboard
 
 
 class Interface:
@@ -17,10 +18,17 @@ class Interface:
             self.janela, self.eventos, self.valores = Sg.read_all_windows()
 
             if self.eventos in ('seguir', 'curtir'):
+                self.modo = str(self.eventos)
                 self.janela1.close()
                 self.janela2 = self.layouts(2)
-                programa = Thread(target=Program, args=(self.eventos,))
-                programa.start()
+                print('>>> Mova para a janela e aperte: Iniciar')
+
+            if self.eventos == 'Iniciar':
+                self.janela2['Iniciar'].update(disabled=True)
+                print(f'>>> MODO: {self.modo} selecionado')
+                programa = Process(target=Program, args=(self.modo,))
+                programa.daemon = True
+                programa.run()
 
             if self.eventos == Sg.WINDOW_CLOSED:
                 sys.exit()
@@ -36,7 +44,7 @@ class Interface:
 
         if n == 2:
             layout2 = [
-                [Sg.Text('Aperte Esc para sair!')],
+                [Sg.Text('Aperte Esc para sair!'), Sg.Text(' ' * 27), Sg.Button('Iniciar')],
                 [Sg.Output(size=(40, 20), text_color='blue')]
             ]
             return Sg.Window('Mr Insta',
@@ -47,3 +55,16 @@ class Interface:
                              disable_minimize=True,
                              icon=Interface.icon,
                              disable_close=True)
+
+
+def iniciar():
+    interface = Process(target=Interface)
+    interface.daemon = True
+    interface.start()
+    while True:
+        if keyboard.is_pressed('Esc'):
+            break
+
+
+if __name__ == '__main__':
+    iniciar()

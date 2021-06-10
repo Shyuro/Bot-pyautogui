@@ -19,6 +19,7 @@ def resource_path0(relative_path):
 class logging:
     @staticmethod
     def debug(msg):
+        time.sleep(0.5)
         print(f'>>> '
               f'{datetime.datetime.today().hour}:{datetime.datetime.today().minute}:{datetime.datetime.today().second}'
               f' DEBUG: {msg}')
@@ -42,8 +43,10 @@ class Program:
     seguir = resource_path0('img/seguir.png')
     xpag = resource_path0('img/xpag.png')
     xinstelikes = resource_path0('img/xinstelikes.png')
+    indisponivel2 = resource_path0('img/indisponivel2.png')
 
     def __init__(self, modo):
+
         self.count = 0  # numero de trades finalizadas
         self.testes = 0  # faz 20 testes e se não encontrar finaliza
         self.update = random.randint(3, 8)
@@ -51,7 +54,7 @@ class Program:
 
         logging.debug('Aperte Esc para sair!!')
         try:
-            logging.debug('iniciando programa.')
+            logging.debug('iniciando programa...')
             while True:
                 if self.count >= self.update:
                     Program.atualizar(self)
@@ -62,41 +65,25 @@ class Program:
                     Program.b_curtir(self)
                 Program.confirmar()
         except KeyboardInterrupt:
-            logging.debug('finalizando programa.')
+            logging.debug('finalizando programa...')
             sys.exit()
 
-    '''def iniciar_text(self):
-        print('|==== Selecione o modo ====|')
-        print('|[1] PARA SEGUIR' + (' ' * 11) + '|')
-        print('|[2] PARA CURTIR' + (' ' * 11) + '|')
-        self.mode = input('=> ')
-        while self.mode not in ('1', '2'):
-            self.mode = input('=> ')
-        if self.mode == '1':
-            print('MODO SEGUIR SELECIONADO!', flush=True)
-        elif self.mode == '2':
-            print('MODO CURTIR SELECIONADO', flush=True)
-        time.sleep(1)
-        print('MUDE PARA A TELA DO BLUESTACKS E LARGUE O MOUSE', flush=True)
-        time.sleep(1)
-        print('INICIANDO...', flush=True)
-        time.sleep(1)'''
-
     def b_ganharmoedas(self):
-        logging.debug('esperando, tela....')
+        logging.debug('Botão ganhar moedas')
+        logging.debug('Detectando botão')
         while True:
 
             regiao = random.choice(self.lista_botoes)
             ganharmoedas = pyautogui.locateOnScreen(Program.ganharmoedas, confidence=0.9, region=regiao)
             if ganharmoedas:
-                logging.debug('tela detectada!')
+                logging.debug('Botão detectado!')
                 try:
                     x, y = pyautogui.locateCenterOnScreen(Program.ganharmoedas,
                                                           confidence=0.9,
                                                           region=regiao)
-                    logging.debug('pegando moedas')
                     mouse.move(x, y)
                     pyautogui.click()
+                    logging.debug('Click feito com sucesso!')
                     time.sleep(2)
                     self.testes = 0
                     break
@@ -104,10 +91,10 @@ class Program:
                     pass
 
     def b_curtir(self):
-        logging.debug('curtindo')
+        logging.debug('Botão curtir')
+        logging.debug('Detectando Botão')
         while True:
 
-            curtiroff = pyautogui.locateOnScreen(Program.curtiroff, confidence=0.8)
             curtiron = pyautogui.locateOnScreen(Program.curtiron, confidence=0.8)
 
             if curtiron:
@@ -116,20 +103,36 @@ class Program:
                 pyautogui.click()
                 self.count += 1
                 Program.mudar_pag()
-                logging.debug('curtido com sucesso')
+                logging.debug('Curtido com sucesso')
                 break
-            elif curtiroff:
-                self.count += 1
-                logging.debug('já havia curtido, voltando!')
-                Program.mudar_pag()
-                break
+            else:
+                curtiroff = pyautogui.locateOnScreen(Program.curtiroff, confidence=0.8)
+                if curtiroff:
+                    self.count += 1
+                    logging.debug('Já havia curtido, voltando!')
+                    Program.mudar_pag()
+                    break
+                else:
+                    indisponivel = pyautogui.locateOnScreen(Program.indisponivel, confidence=0.8)
+                    if indisponivel:
+                        pyautogui.press('f5')
+                        logging.debug('Erro, corrigindo!')
+                        Program.mudar_pag()
+                        break
+                    else:
+                        indisponivel2 = pyautogui.locateOnScreen(Program.indisponivel2, confidence=0.8)
+                        if indisponivel2:
+                            self.testes = 0
+                            self.count += 1
+                            logging.debug('Já havia seguido, voltando!')
+                            Program.mudar_pag()
+                            break
 
     def b_seguir(self):
-        logging.debug('seguindo')
+        logging.debug('Botão seguir')
+        logging.debug('Detectando botão')
         while True:
-            seguindo = pyautogui.locateOnScreen(Program.seguindo, confidence=0.8)
-            solicitado = pyautogui.locateOnScreen(Program.solicitado, confidence=0.8)
-            indisponivel = pyautogui.locateOnScreen(Program.indisponivel, confidence=0.8)
+
             seguir = pyautogui.locateOnScreen(Program.seguir, confidence=0.8)
             if seguir:
                 try:
@@ -137,37 +140,48 @@ class Program:
                     mouse.move(x, y)
                     pyautogui.click()
                     self.count += 1
-                    logging.debug('seguido com sucesso, voltando!')
+                    logging.debug('Seguido com sucesso!')
                     Program.mudar_pag()
                     self.testes = 0
                     break
                 except TypeError:
                     pass
-
-            elif indisponivel:
-                self.testes = 0
-                self.count += 1
-                logging.debug('já havia seguido, voltando!')
-                Program.mudar_pag()
-                break
-
-            elif seguindo:
-                self.testes = 0
-                self.count += 1
-                logging.debug('já havia seguido, voltando!')
-                Program.mudar_pag()
-                break
-
-            elif solicitado:
-                self.testes = 0
-                self.count += 1
-                logging.debug('já havia seguido, voltando!')
-                Program.mudar_pag()
-                break
+            else:
+                indisponivel = pyautogui.locateOnScreen(Program.indisponivel, confidence=0.8)
+                if indisponivel:
+                    pyautogui.press('f5')
+                    logging.debug('Erro, corrigindo!')
+                    Program.mudar_pag()
+                    break
+                else:
+                    indisponivel2 = pyautogui.locateOnScreen(Program.indisponivel2, confidence=0.8)
+                    if indisponivel2:
+                        self.testes = 0
+                        self.count += 1
+                        logging.debug('Já havia seguido, voltando!')
+                        Program.mudar_pag()
+                        break
+                    else:
+                        seguindo = pyautogui.locateOnScreen(Program.seguindo, confidence=0.8)
+                        if seguindo:
+                            self.testes = 0
+                            self.count += 1
+                            logging.debug('Erro, corrigindo!')
+                            Program.mudar_pag()
+                            break
+                        else:
+                            solicitado = pyautogui.locateOnScreen(Program.solicitado, confidence=0.8)
+                            if solicitado:
+                                self.testes = 0
+                                self.count += 1
+                                logging.debug('já havia seguido, voltando!')
+                                Program.mudar_pag()
+                                break
 
     @staticmethod
     def confirmar():
-        logging.debug('confirmando')
+        logging.debug('Botão confirmar')
+        logging.debug('Detectando botão')
         while True:
             confirmar = pyautogui.locateOnScreen(Program.confirmarimg, confidence=0.8)
 
@@ -202,12 +216,13 @@ class Program:
                     except TypeError:
                         pass
                 else:
-                    logging.debug('confirmado com sucesso!')
+                    logging.debug('Confirmado com sucesso!')
 
                 break
 
     def atualizar(self):
-        logging.debug('atualizando')
+        logging.debug('Botão atualizar')
+        logging.debug('Detectando botão')
         while True:
             atualizar = pyautogui.locateOnScreen(Program.atualizarimg, confidence=0.8)
             if atualizar:
@@ -215,7 +230,7 @@ class Program:
                     x, y = pyautogui.locateCenterOnScreen(Program.atualizarimg, confidence=0.8)
                     mouse.move(x, y)
                     pyautogui.click()
-                    logging.debug('atualizado com sucesso!')
+                    logging.debug('Atualizado com sucesso!')
                     self.count = 0
                     self.testes = 0
                     break
@@ -224,7 +239,7 @@ class Program:
 
     @staticmethod
     def mudar_pag():
-        logging.debug('movendo pagina')
+        logging.debug('Mudando a pagina!')
         while True:
             instax = pyautogui.locateOnScreen(Program.xpag, confidence=0.7)
 
@@ -235,6 +250,7 @@ class Program:
                                                               region=(464, 10, 11, 12))
                     pyautogui.moveTo(x_i, y_i, 1, pyautogui.easeOutQuad)
                     pyautogui.click()
+                    logging.debug('Sucesso!')
                     break
                 except TypeError:
                     pass

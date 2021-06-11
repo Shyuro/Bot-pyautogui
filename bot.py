@@ -20,7 +20,7 @@ class logging:
     @staticmethod
     def debug(msg):
         time.sleep(0.5)
-        print(f'>>> '
+        print(f'>> '
               f'{datetime.datetime.today().hour}:{datetime.datetime.today().minute}:{datetime.datetime.today().second}'
               f' DEBUG: {msg}')
 
@@ -51,11 +51,17 @@ class Program:
         self.testes = 0  # faz 20 testes e se não encontrar finaliza
         self.update = random.randint(3, 8)
         self.modo = modo
+        self.tentativa = 0
+        self.finalizar = 0
 
         logging.debug('Aperte Esc para sair!!')
         try:
             logging.debug('iniciando programa...')
             while True:
+                if self.finalizar >= 6:
+                    logging.debug('Botões não foram encontrados!')
+                    logging.debug('Tente Novamente!')
+                    break
                 if self.count >= self.update:
                     Program.atualizar(self)
                 Program.b_ganharmoedas(self)
@@ -63,7 +69,7 @@ class Program:
                     Program.b_seguir(self)
                 elif modo == 'curtir':
                     Program.b_curtir(self)
-                Program.confirmar()
+                Program.confirmar(self)
         except KeyboardInterrupt:
             logging.debug('finalizando programa...')
             sys.exit()
@@ -85,10 +91,18 @@ class Program:
                     pyautogui.click()
                     logging.debug('Click feito com sucesso!')
                     time.sleep(2)
-                    self.testes = 0
+                    self.tentativas(True)
                     break
                 except TypeError:
                     pass
+            else:
+                if self.tentativa >= 50:
+                    logging.debug('Botão não encontrado!')
+                    self.finalizar += 1
+                    logging.debug(f'Pulando [{self.finalizar}]!')
+                    break
+                else:
+                    self.tentativas(False)
 
     def b_curtir(self):
         logging.debug('Botão curtir')
@@ -103,6 +117,7 @@ class Program:
                 pyautogui.click()
                 self.count += 1
                 Program.mudar_pag()
+                self.tentativas(True)
                 logging.debug('Curtido com sucesso')
                 break
             else:
@@ -111,6 +126,7 @@ class Program:
                     self.count += 1
                     logging.debug('Já havia curtido, voltando!')
                     Program.mudar_pag()
+                    self.tentativas(True)
                     break
                 else:
                     indisponivel = pyautogui.locateOnScreen(Program.indisponivel, confidence=0.8)
@@ -118,6 +134,7 @@ class Program:
                         pyautogui.press('f5')
                         logging.debug('Erro, corrigindo!')
                         Program.mudar_pag()
+                        self.tentativas(True)
                         break
                     else:
                         indisponivel2 = pyautogui.locateOnScreen(Program.indisponivel2, confidence=0.8)
@@ -126,7 +143,16 @@ class Program:
                             self.count += 1
                             logging.debug('Já havia seguido, voltando!')
                             Program.mudar_pag()
+                            self.tentativas(True)
                             break
+                        else:
+                            if self.tentativa >= 50:
+                                logging.debug('Botão não encontrado!')
+                                self.finalizar += 1
+                                logging.debug(f'Pulando [{self.finalizar}]!')
+                                break
+                            else:
+                                self.tentativas(False)
 
     def b_seguir(self):
         logging.debug('Botão seguir')
@@ -142,7 +168,7 @@ class Program:
                     self.count += 1
                     logging.debug('Seguido com sucesso!')
                     Program.mudar_pag()
-                    self.testes = 0
+                    self.tentativas(True)
                     break
                 except TypeError:
                     pass
@@ -156,7 +182,7 @@ class Program:
                 else:
                     indisponivel2 = pyautogui.locateOnScreen(Program.indisponivel2, confidence=0.8)
                     if indisponivel2:
-                        self.testes = 0
+                        self.tentativas(True)
                         self.count += 1
                         logging.debug('Já havia seguido, voltando!')
                         Program.mudar_pag()
@@ -164,7 +190,7 @@ class Program:
                     else:
                         seguindo = pyautogui.locateOnScreen(Program.seguindo, confidence=0.8)
                         if seguindo:
-                            self.testes = 0
+                            self.tentativas(True)
                             self.count += 1
                             logging.debug('Erro, corrigindo!')
                             Program.mudar_pag()
@@ -172,14 +198,21 @@ class Program:
                         else:
                             solicitado = pyautogui.locateOnScreen(Program.solicitado, confidence=0.8)
                             if solicitado:
-                                self.testes = 0
+                                self.tentativas(True)
                                 self.count += 1
                                 logging.debug('já havia seguido, voltando!')
                                 Program.mudar_pag()
                                 break
+                            else:
+                                if self.tentativa >= 50:
+                                    logging.debug('Botão não encontrado!')
+                                    self.finalizar += 1
+                                    logging.debug(f'Pulando [{self.finalizar}]!')
+                                    break
+                                else:
+                                    self.tentativas(False)
 
-    @staticmethod
-    def confirmar():
+    def confirmar(self):
         logging.debug('Botão confirmar')
         logging.debug('Detectando botão')
         while True:
@@ -216,9 +249,18 @@ class Program:
                     except TypeError:
                         pass
                 else:
+                    self.tentativas(True)
                     logging.debug('Confirmado com sucesso!')
 
                 break
+            else:
+                if self.tentativa >= 50:
+                    logging.debug('Botão não encontrado!')
+                    self.finalizar += 1
+                    logging.debug(f'Pulando [{self.finalizar}]!')
+                    break
+                else:
+                    self.tentativas(False)
 
     def atualizar(self):
         logging.debug('Botão atualizar')
@@ -232,10 +274,18 @@ class Program:
                     pyautogui.click()
                     logging.debug('Atualizado com sucesso!')
                     self.count = 0
-                    self.testes = 0
+                    self.tentativas(True)
                     break
                 except TypeError:
                     pass
+            else:
+                if self.tentativa >= 50:
+                    logging.debug('Botão não encontrado!')
+                    self.finalizar += 1
+                    logging.debug(f'Pulando [{self.finalizar}]!')
+                    break
+                else:
+                    self.tentativas(False)
 
     @staticmethod
     def mudar_pag():
@@ -254,3 +304,13 @@ class Program:
                     break
                 except TypeError:
                     pass
+
+    def tentativas(self, feito=False):
+        if not feito:
+            if self.tentativa >= 50:
+                self.tentativa = 1
+            else:
+                self.tentativa += 1
+
+        else:
+            self.tentativa = 0

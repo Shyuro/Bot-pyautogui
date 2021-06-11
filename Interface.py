@@ -32,60 +32,60 @@ class Interface:
         while True:
             self.janela, self.eventos, self.valores = Sg.read_all_windows()
 
-            if self.eventos in ('seguir', 'curtir'):
-                self.modo = str(self.eventos)
-                self.janela1.close()
-                self.janela2 = self.layouts(2)
-                print('>>> Mova para a janela e aperte: Iniciar')
+            if self.janela1 == self.janela:
+                if self.eventos in ('seguir', 'curtir'):
+                    self.modo = str(self.eventos)
+                    self.janela1.close()
+                    self.janela2 = self.layouts(2)
+                    print('>>> Mude para a janela e aperte: Iniciar')
+                    print(f'>>> Modo: {self.modo.upper()} selecionado')
 
-            if self.eventos == 'Iniciar':
-                self.janela2['Iniciar'].update(disabled=True)
-                print(f'>>> MODO: {self.modo} selecionado')
-                if __name__ == '__main__':
-                    freeze_support()
-                    programa = Process(target=Program, args=(self.modo,))
-                    programa.daemon = True
-                    programa.run()
+            if self.janela2 == self.janela:
+                if self.eventos == 'Iniciar':
+                    self.janela2['Iniciar'].update(disabled=True, text='Aperte Esc para sair')
+                    if __name__ == ('__mp_main__' or '__main__'):
+                        freeze_support()
+                        self.programa = Process(target=Program, args=(self.modo,))
+                        self.programa.daemon = False
+                        self.programa.run()
+                        self.janela2['Iniciar'].update(disabled=False, text='Iniciar')
 
             if self.eventos == Sg.WINDOW_CLOSED:
+                print(self.programa)
                 sys.exit()
 
     @staticmethod
     def layouts(n=1):
         if n == 1:
             titlebar = [
-                [Sg.Text('Ghoosty - Instebot', background_color='#141414', text_color='#F2008C', pad=(400, 0))]
+                [Sg.Text('Instebot', background_color='#141414', text_color='#F2008C', pad=(430, 0))]
             ]
-            downbar = [
-                [Sg.Text('*Aperte esc para sair', background_color='#B72C6D', text_color='#000000', pad=(400, 0))]
-            ]
+
             layout1 = [[Sg.Column(layout=titlebar,
                                   expand_x=True,
                                   background_color='#141414',
-                                  grab=True, pad=((0, 0), (0, 0)))],
+                                  grab=False, pad=((0, 0), (0, 0)))],
 
                        [
                            Sg.Button(image_filename=Interface.follow_img, key='seguir', button_color='white'),
                            Sg.Button(image_filename=Interface.like_img, key='curtir', button_color='white')],
 
-                       [Sg.Column(layout=downbar,
-                                  expand_x=True,
-                                  background_color='#B72C6D',
-                                  pad=((0, 0), (0, 0)))],
                        ]
 
-            return Sg.Window('Ghoosty - Instebot',
+            return Sg.Window('Ghoosty',
                              layout=layout1,
                              finalize=True,
                              margins=(0, 0),
                              resizable=False,
                              keep_on_top=True,
-                             no_titlebar=True,
-                             grab_anywhere=True)
+                             icon=Interface.icon,
+                             no_titlebar=False,
+                             grab_anywhere=True
+                             )
 
         if n == 2:
             titlebar = [
-                [Sg.Text('Ghoosty - Instebot', background_color='#141414', text_color='#F2008C', pad=(100, 0))
+                [Sg.Text('Instebot', background_color='#141414', text_color='#F2008C', pad=(130, 0))
                  ]
 
             ]
@@ -94,28 +94,34 @@ class Interface:
                 [Sg.Column(layout=titlebar,
                            expand_x=True,
                            background_color='#141414',
-                           grab=True, pad=((0, 0), (0, 0)))],
+                           grab=False, pad=((0, 0), (0, 0)))],
 
-                [Sg.Text('*Aperte Esc para sair!'), Sg.Text(' ' * 27), Sg.Button('Iniciar')],
-                [Sg.Output(size=(40, 20), text_color='#B7006E')]
+                [Sg.Output(size=(40, 20), text_color='#B7006E')],
+                [Sg.Button('Iniciar', size=(37, 0), key='Iniciar', enable_events=True)],
+
             ]
 
-            return Sg.Window('Ghoosty - Instebot',
+            return Sg.Window('Ghoosty',
                              layout=layout2,
                              finalize=True,
                              location=(-3, 660),
                              keep_on_top=True,
+                             disable_minimize=True,
                              grab_anywhere=True,
                              resizable=False,
                              margins=(-1, -1),
-                             no_titlebar=True, )
+                             no_titlebar=False,
+                             icon=Interface.icon,)
 
 
 def iniciar():
     interface = Process(target=Interface)
     interface.daemon = True
     interface.start()
+
     while True:
+        if str(interface).count('stopped') == 1:
+            break
         if keyboard.is_pressed('Esc'):
             break
 

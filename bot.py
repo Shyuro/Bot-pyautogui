@@ -96,7 +96,7 @@ class Program:
                 except TypeError:
                     pass
             else:
-                if self.tentativa >= 50:
+                if self.tentativa >= 100:
                     logging.debug('Botão não encontrado!')
                     self.finalizar += 1
                     logging.debug(f'Pulando [{self.finalizar}]!')
@@ -146,7 +146,7 @@ class Program:
                             self.tentativas(True)
                             break
                         else:
-                            if self.tentativa >= 50:
+                            if self.tentativa >= 100:
                                 logging.debug('Botão não encontrado!')
                                 self.finalizar += 1
                                 logging.debug(f'Pulando [{self.finalizar}]!')
@@ -204,7 +204,7 @@ class Program:
                                 Program.mudar_pag()
                                 break
                             else:
-                                if self.tentativa >= 50:
+                                if self.tentativa >= 100:
                                     logging.debug('Botão não encontrado!')
                                     self.finalizar += 1
                                     logging.debug(f'Pulando [{self.finalizar}]!')
@@ -254,7 +254,7 @@ class Program:
 
                 break
             else:
-                if self.tentativa >= 50:
+                if self.tentativa >= 100:
                     logging.debug('Botão não encontrado!')
                     self.finalizar += 1
                     logging.debug(f'Pulando [{self.finalizar}]!')
@@ -279,7 +279,7 @@ class Program:
                 except TypeError:
                     pass
             else:
-                if self.tentativa >= 50:
+                if self.tentativa >= 100:
                     logging.debug('Botão não encontrado!')
                     self.finalizar += 1
                     logging.debug(f'Pulando [{self.finalizar}]!')
@@ -307,7 +307,7 @@ class Program:
 
     def tentativas(self, feito=False):
         if not feito:
-            if self.tentativa >= 50:
+            if self.tentativa >= 100:
                 self.tentativa = 1
             else:
                 self.tentativa += 1

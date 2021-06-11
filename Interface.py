@@ -60,15 +60,21 @@ class Interface:
             titlebar = [
                 [Sg.Text('Instebot', background_color='#141414', text_color='#F2008C', pad=(430, 0))]
             ]
+            downbar = [
+                [Sg.Text('Copyright (c) 2021 Shyuro', background_color='#141414', text_color='#F2008C', pad=(385, 0))]
+            ]
 
             layout1 = [[Sg.Column(layout=titlebar,
                                   expand_x=True,
                                   background_color='#141414',
                                   grab=False, pad=((0, 0), (0, 0)))],
 
-                       [
-                           Sg.Button(image_filename=Interface.follow_img, key='seguir', button_color='white'),
-                           Sg.Button(image_filename=Interface.like_img, key='curtir', button_color='white')],
+                       [Sg.Button(image_filename=Interface.follow_img, key='seguir', button_color='white'),
+                        Sg.Button(image_filename=Interface.like_img, key='curtir', button_color='white')],
+                       [Sg.Column(layout=downbar,
+                                  expand_x=True,
+                                  background_color='#141414',
+                                  grab=False, pad=((0, 0), (0, 0)))]
 
                        ]
 
